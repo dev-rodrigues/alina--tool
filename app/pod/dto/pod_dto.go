@@ -22,6 +22,5 @@ func MapPodDTOToPod(dto PodDTO) domain.Pod {
 		Location: dto.Location,
 		Commands: dto.Commands,
 		Started:  false,
-		Pid:      0,
 	}
 }

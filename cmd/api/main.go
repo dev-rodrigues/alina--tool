@@ -17,13 +17,11 @@ func main() {
 	defer redisClient.Close()
 
 	podRepository := repository.NewPodRepository(redisClient)
-	cmdRepository := repository.NewCmdMap()
 
 	podService := service.NewPodService(podRepository)
 	podHandler := http.NewPodHandler(podService)
 
-	processService := service.NewProcessService(podRepository, cmdRepository)
-	procHandler := http.NewProcessHandler(processService)
+	pm2Handler := http.NewPm2Handler()
 
 	router := server.NewRouter()
 
@@ -31,9 +29,7 @@ func main() {
 	router.GET("/pod", podHandler.GetPods)
 	router.GET("/pod/:id", podHandler.GetPod)
 
-	router.GET("/services", procHandler.GetServices)
-	router.POST("/services/:pod", procHandler.CreateService)
-	router.GET("/services/:pod", procHandler.GetService)
+	router.GET("/pm2/list", pm2Handler.GetPm2List)
 
 	router.Run(":8080")
 }
